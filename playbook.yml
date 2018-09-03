@@ -1,0 +1,19 @@
+---
+- hosts: apache-slave-droplet
+  sudo: yes
+  tasks:
+    - name: INSTALL PACKAGES
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - apache2
+        - git
+
+
+    - name: START APACHE
+      service: name=apache2 state=started
+
+    - name: DEPLOY WEBSITE
+      git: repo=https://github.com/rcampbell95/cmpe-172.git dest=/var/www/html update=yes
+
+    - name: STOP APACHE
+      service: name=apache2 state=stopped
